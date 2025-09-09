@@ -86,16 +86,17 @@ To solve this problem, we want to build a SaaS-based (Software as a Service) pla
 
 Follow these steps to set up CertifyX on your local machine:
 
-### 1️⃣ Prerequisites
+1️⃣ Prerequisites
 - Python 3.9+ installed ([Download here](https://www.python.org/downloads/))
 - MySQL Server installed and running ([Download here](https://dev.mysql.com/downloads/installer/))
 - Git installed ([Download here](https://git-scm.com/downloads))
 
-### 2️⃣ Clone Repository
+2️⃣ Clone Repository
 ```bash
 git clone https://github.com/your-username/certifyx.git
 cd certifyx
-3️⃣ Create & Activate Virtual Environment
+
+### 3️⃣ Create & Activate Virtual Environment
 bash
 Copy code
 python -m venv venv
