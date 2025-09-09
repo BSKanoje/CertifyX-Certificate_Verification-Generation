@@ -98,7 +98,6 @@ cd certifyx
 ```
 ### 3️⃣ Create & Activate Virtual Environment
 ```bash
-Copy code
 python -m venv venv
 
 # Activate (Windows)
@@ -109,14 +108,12 @@ source venv/bin/activate
 ```
 ### 4️⃣ Install Dependencies
 ```bash
-Copy code
 pip install -r requirements.txt
 ```
 ### 5️⃣ Configure Database
 Edit settings.py and update:
 
 python
-Copy code
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -130,24 +127,20 @@ DATABASES = {
 Run migrations:
 
 bash
-Copy code
 python manage.py makemigrations
 python manage.py migrate
 ### 6️⃣ Create Superuser
 ```bash
-Copy code
 python manage.py createsuperuser
 ```
 ### 7️⃣ Run Development Server
 ```bash
-Copy code
 python manage.py runserver
 ```
 Now open http://127.0.0.1:8000/ in your browser to view the project.
 
 ##📂 Project Structure
 csharp
-Copy code
 certifyx/
 ├── accounts/            # User authentication & company registration
 ├── manageTemplate/      # Certificate template management
