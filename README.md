@@ -86,18 +86,18 @@ To solve this problem, we want to build a SaaS-based (Software as a Service) pla
 
 Follow these steps to set up CertifyX on your local machine:
 
-1️⃣ Prerequisites
+### 1️⃣ Prerequisites
 - Python 3.9+ installed ([Download here](https://www.python.org/downloads/))
 - MySQL Server installed and running ([Download here](https://dev.mysql.com/downloads/installer/))
 - Git installed ([Download here](https://git-scm.com/downloads))
 
-2️⃣ Clone Repository
+### 2️⃣ Clone Repository
 ```bash
 git clone https://github.com/your-username/certifyx.git
 cd certifyx
-
+```
 ### 3️⃣ Create & Activate Virtual Environment
-bash
+```bash
 Copy code
 python -m venv venv
 
@@ -106,11 +106,13 @@ venv\Scripts\activate
 
 # Activate (Mac/Linux)
 source venv/bin/activate
-4️⃣ Install Dependencies
-bash
+```
+### 4️⃣ Install Dependencies
+```bash
 Copy code
 pip install -r requirements.txt
-5️⃣ Configure Database
+```
+### 5️⃣ Configure Database
 Edit settings.py and update:
 
 python
@@ -131,17 +133,19 @@ bash
 Copy code
 python manage.py makemigrations
 python manage.py migrate
-6️⃣ Create Superuser
-bash
+### 6️⃣ Create Superuser
+```bash
 Copy code
 python manage.py createsuperuser
-7️⃣ Run Development Server
-bash
+```
+### 7️⃣ Run Development Server
+```bash
 Copy code
 python manage.py runserver
+```
 Now open http://127.0.0.1:8000/ in your browser to view the project.
 
-📂 Project Structure
+##📂 Project Structure
 csharp
 Copy code
 certifyx/
@@ -156,15 +160,14 @@ certifyx/
 ├── requirements.txt
 ├── manage.py
 └── README.md
-🤝 Contributing
+
+##🤝 Contributing
 Contributions are welcome!
 Please fork this repository, create a feature branch, make changes, and submit a pull request.
 
-📄 License
-This project is licensed under the MIT License – see the LICENSE file for details.
 
-👤 Author
+###👤 Author
 Bushra Kanoje
 🎓 B.Tech CSE (2025), Bajaj Institute of Technology
 💻 Python Developer | Django Enthusiast
-📧 Contact: your-email@example.com
+📧 Contact: bushrakanoje03@gmail.com
