@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | CertifyX{% endblock %}
+
+{% block extra_head %}
+<style>
+    :root {
+        --certifyx-yellow: #F2B900;
+        --dark-gray: #343a40;
+        --light-gray: #f8f9fa;
+    }
+    .dashboard-container {
+        margin-top: 1.5rem;
+    }
+    .dashboard-header h1 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--dark-gray);
+    }
+    .dashboard-header p {
+        font-size: 1rem;
+        color: #555;
+    }
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+        font-size: 0.95rem;
+    }
+    .card-header {
+        font-weight: 600;
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+        background-color: var(--dark-gray);
+        color: white;
+        border-radius: 10px 10px 0 0;
+    }
+    .card-body {
+        padding: 0.8rem 1rem;
+    }
+    .btn-view-plans {
+        background-color: var(--certifyx-yellow);
+        border-color: var(--certifyx-yellow);
+        color: var(--dark-gray);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    .btn-view-plans:hover {
+        background-color: #d9a700;
+        border-color: #d9a700;
+        color: var(--dark-gray);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container dashboard-container">
+
+    <div class="row mb-4">
+        <div class="col-12 text-center dashboard-header">
+            <h1>Welcome, {{ company.company_name }} 👋</h1>
+            {% if not subscription %}
+                <p>You currently don’t have any active plan.</p>
+            {% else %}
+                <p>You are subscribed to the <strong>{{ subscription.plan.name }}</strong> plan.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if subscription %}
+
+    <div class="row">
+        <!-- Plan Details -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    Plan Details
+                </div>
+                <div class="card-body">
+                    <p><strong>Plan Name:</strong> {{ subscription.plan.name }}</p>
+                    <p><strong>Price:</strong> ₹{{ subscription.plan.price }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certificate Usage -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    Certificate Usage
+                </div>
+                <div class="card-body">
+                    <p><strong>Used:</strong> {{ certificates_used }} / {{ subscription.plan.certificate_limit }}</p>
+                    <p><strong>Remaining:</strong> {{ remaining_certificates }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plan Validity -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    Plan Validity
+                </div>
+                <div class="card-body">
+                    <p><strong>Expiry Date:</strong> {{ subscription.expiry_date }}</p>
+                    <p><strong>Days Left:</strong> {{ days_left }} day{{ days_left|pluralize }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    Status
+                </div>
+                <div class="card-body">
+                    <p><strong>Payment Status:</strong> {{ subscription.payment_status }}</p>
+                    <p><strong>Subscription:</strong> 
+                        {% if subscription.is_subscription_active %}
+                            <span class="text-success font-weight-bold">Active</span>
+                        {% else %}
+                            <span class="text-danger font-weight-bold">Expired</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="alert alert-warning text-center">
+        <h5>No Active Subscription</h5>
+        <p>Choose a plan to start issuing certificates.</p>
+        <a href="{% url 'plans' %}" class="btn btn-view-plans">View Plans</a>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

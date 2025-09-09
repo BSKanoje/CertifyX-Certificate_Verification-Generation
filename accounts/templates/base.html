@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}CertifyX{% endblock %}</title>
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&display=swap" rel="stylesheet">
+
+
+  <style>
+    :root {
+      --certifyx-yellow: #F2B900;
+      --dark-gray: #343a40;
+      --light-gray: #f8f9fa;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .content {
+      flex: 1;
+    }
+
+    main {
+        flex: 1;
+    }
+
+
+    /* Navbar */
+    .navbar {
+      background-color: var(--certifyx-yellow);
+    }
+
+    .navbar a {
+      color: black !important;
+    }
+
+    .navbar a:hover {
+      color: #333 !important;
+    }
+
+    .navbar .navbar-brand h1 {
+      color: black;
+      margin: 0;
+    }
+
+    .navbar .tagline {
+      font-size: 0.9rem;
+      color: #333;
+      font-style: italic;
+    }
+
+    .navbar-nav .nav-item {
+      margin-right: 20px;
+    }
+
+    .navbar-nav .nav-link {
+      color: black !important;
+      transition: all 0.2s;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: #333 !important;
+    }
+
+    .navbar-nav .active .nav-link {
+      font-weight: bold;
+      background-color: var(--dark-gray);
+      color: var(--light-gray) !important;
+      border-radius: 5px;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    /* Dropdown */
+    .dropdown-menu {
+      background-color: var(--light-gray);
+      border: 1px solid #ccc;
+    }
+
+    .dropdown-item {
+      color: black !important;
+    }
+
+    .dropdown-item:hover {
+      background-color: var(--certifyx-yellow);
+      color: black !important;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--certifyx-yellow);
+      padding: 10px 0;
+      text-align: center;
+      color: black;
+      font-size: 1rem;
+    }
+
+    /* Field label preview */
+    .preview-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .field-label {
+      position: absolute;
+      background-color: rgba(255, 255, 0, 0.6);
+      padding: 2px 6px;
+      cursor: move;
+      border: 1px dashed #333;
+      white-space: nowrap;
+    }
+  </style>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="{% url 'home' %}" style="text-decoration: none; text-align: left;">
+      <h2 style="margin: 0; font-family: 'Dancing Script', cursive; font-size: 1.8rem; font-weight: 600; color: #333;">
+        JumpWhere’s
+      </h2>
+
+      <h1 style="margin: 0; font-size: 2.4rem; font-weight: 700; color: #000;">
+        CertifyX
+      </h1>
+
+      <p class="tagline" style="margin-top: -5px;">Where Certificates Are Always Verified, Always Secure</p>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item {% url 'plans' as plans_url %}{% if request.path == plans_url %}active{% endif %}">
+            <a class="nav-link" href="{{ plans_url }}">Plans</a>
+        </li>
+        <li class="nav-item {% url 'template_list' as template_url %}{% if request.path == template_url %}active{% endif %}">
+          <a class="nav-link" href="{{ template_url }}">Manage Templates</a>
+        </li>
+        <li class="nav-item {% url 'candidate_list' as candidate_url %}{% if request.path == candidate_url %}active{% endif %}">
+          <a class="nav-link" href="{{ candidate_url }}">Candidate Management</a>
+        </li>
+        <li class="nav-item {% url 'generate_certificates' as generate_url %}{% if request.path == generate_url %}active{% endif %}">
+          <a class="nav-link" href="{{ generate_url }}">Generate Certificates</a>
+        </li>
+        <li class="nav-item {% url 'certificate_list' as cert_url %}{% if request.path == cert_url %}active{% endif %}">
+          <a class="nav-link" href="{{ cert_url }}">Certificates</a>
+        </li>
+        <li class="nav-item {% url 'reports' as reports_url %}{% if request.path == reports_url %}active{% endif %}">
+            <a class="nav-link" href="{{ reports_url }}">Reports</a>
+        </li>
+        <li class="nav-item dropdown {% if request.path == '/profile-settings' or request.path == '/reset-password' %}active{% endif %}">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profile</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/profile-settings">Edit Profile</a>
+            <a class="dropdown-item" href="/reset-password">Reset Password</a>
+            <a class="dropdown-item" href="{% url 'verify_certificate' %}">Verify Certificate</a>
+          </div>
+        </li>
+        <li class="nav-item {% if request.path == '/logout' %}active{% endif %}">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mt-5 content">
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 CertifyX. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CertifyX - Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa; /* Light Gray */
+    }
+
+    .login-container {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      display: flex;
+      width: 900px;
+      max-width: 100%;
+      background: #ffffff;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .login-form {
+      flex: 1;
+      padding: 40px;
+      background-color: #ffffff;
+    }
+
+    .login-form h3 {
+      font-weight: 700;
+      margin-bottom: 25px;
+      color: #343a40; /* Dark Gray */
+    }
+
+    .form-control {
+      border-radius: 8px;
+    }
+
+    .btn-custom {
+      background-color: #FFD700; /* Yellow */
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      color: #343a40;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+      background-color: #e6c200;
+    }
+
+    .side-panel {
+      flex: 1;
+      background-color: #343a40; /* Dark Gray */
+      color: #FFD700; /* Yellow Text */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .side-panel h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+
+    .side-panel p {
+      font-size: 1.2rem;
+      font-style: italic;
+      margin-top: 10px;
+    }
+
+    .login-form p a {
+      color: #FFD700;
+      text-decoration: none;
+    }
+
+    .login-form p a:hover {
+      text-decoration: underline;
+    }
+
+    .alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <div class="login-card">
+
+    <!-- Left Side: Login Form -->
+    <div class="login-form">
+      <h3>Welcome Back</h3>
+
+      <!-- Display messages -->
+      {% if messages %}
+        <div class="alert alert-danger" role="alert">
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="email" name="email" required />
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" required />
+        </div>
+        <div class="d-grid mt-4">
+          <button type="submit" class="btn btn-custom">Login</button>
+        </div>
+      </form>
+
+      <p class="mt-3 text-center">Don't have an account? <a href="/register">Register here</a></p>
+    </div>
+
+    <!-- Right Side: Branding -->
+    <div class="side-panel">
+      <h1>CertifyX</h1>
+      <p>Where Certificates Are Always Verified, Always Secure</p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

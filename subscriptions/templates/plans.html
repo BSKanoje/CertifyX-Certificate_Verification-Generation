@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    :root {
+        --certifyx-yellow: #F2B900;
+        --dark-gray: #1e1e1e;
+        --light-gray: #f8f9fa;
+    }
+
+    body {
+        background-color: var(--light-gray);
+    }
+
+    .container {
+        padding-top: 15px; /* Reduce gap from navbar */
+        padding-bottom: 15px;
+    }
+
+    .plan-alert {
+        background-color: white;
+        border-left: 5px solid var(--certifyx-yellow);
+        padding: 12px 18px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+    }
+
+    .plan-card {
+        background: white;
+        border-radius: 10px;
+        padding: 18px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: all 0.2s ease-in-out;
+        text-align: center;
+        height: 100%;
+    }
+
+    .plan-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+    }
+
+    .plan-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--dark-gray);
+        margin-bottom: 5px;
+    }
+
+    .plan-price {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--certifyx-yellow);
+        margin: 6px 0;
+    }
+
+    .plan-details {
+        font-size: 0.85rem;
+        color: #555;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .btn-certifyx {
+        background-color: var(--dark-gray);
+        color: var(--light-gray);
+        border: none;
+        font-weight: bold;
+        padding: 8px 15px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        transition: background 0.2s ease-in-out;
+    }
+
+    .btn-certifyx:hover {
+        background-color: #d9a900;
+    }
+
+    h2.page-heading {
+        font-weight: bold;
+        color: var(--dark-gray);
+        margin-bottom: 20px;
+        font-size: 1.3rem;
+    }
+</style>
+
+<div class="container">
+
+    {% if subscription %}
+    <div class="plan-alert">
+        <h6 class="mb-1">Your Current Plan: <strong>{{ subscription.plan.name }}</strong></h6>
+        <p class="mb-1">Certificates Used: {{ certificates_used }} / {{ subscription.plan.certificate_limit }}</p>
+        <p class="mb-1">Expires on: <strong>{{ subscription.expiry_date }}</strong></p>
+        {% if subscription.is_subscription_active %}
+            <p class="mb-0">Your plan is active.
+                <a href="{% url 'renew' subscription.id %}" class="text-primary fw-bold">Renew</a>
+                or
+                <a href="{% url 'upgrade_plan' subscription.id 'Elite Plan' %}" class="text-success fw-bold">Upgrade</a>.
+            </p>
+        {% else %}
+            <p class="mb-0 text-danger">Your plan has expired. Please
+                <a href="{% url 'renew' subscription.id %}" class="text-primary fw-bold">renew</a>.
+            </p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <h2 class="page-heading text-center">Choose a Plan That Fits Your Needs</h2>
+    <div class="row g-3">
+        {% for plan in plans %}
+        <div class="col-md-4">
+            <div class="plan-card">
+                <div class="plan-title">{{ plan.name }}</div>
+                <div class="plan-price">₹{{ plan.price }}</div>
+                <div class="plan-details">
+                    <p><strong>Certificates:</strong> {{ plan.certificate_limit }}</p>
+                    <p><strong>Templates:</strong> {{ plan.template_limit }}</p>
+                </div>
+                <a href="{% url 'mock_payment' plan.id %}" class="btn btn-certifyx w-100">Choose Plan</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

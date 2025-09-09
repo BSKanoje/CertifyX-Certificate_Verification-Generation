@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mock Payment | CertifyX</title>
+    <style>
+        :root {
+            --certifyx-yellow: #F2B900;
+            --dark-gray: #1e1e1e;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            padding: 40px;
+            background-color: var(--dark-gray);
+            margin: 0;
+        }
+
+        .payment-box {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--dark-gray);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .plan-details {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .plan-details p {
+            margin: 6px 0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .plan-details strong {
+            color: var(--dark-gray);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--certifyx-yellow);
+            color: var(--dark-gray);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            background-color: #d9a900;
+            transform: translateY(-2px);
+        }
+
+        .secure-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: gray;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-box">
+        <h1>💳 Mock Payment Gateway</h1>
+        <div class="plan-details">
+            <p><strong>Plan Name:</strong> {{ plan.name }}</p>
+            <p><strong>Certificate Limit:</strong> {{ plan.certificate_limit }}</p>
+            <p><strong>Template Limit:</strong> {{ plan.template_limit }}</p>
+            <p><strong>Price:</strong> ₹{{ plan.price }}</p>
+            <p><strong>Duration:</strong> 30 days</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn">💰 Simulate Payment</button>
+        </form>
+
+        <p class="secure-note">🔒 This is a mock payment screen for testing only.</p>
+    </div>
+</body>
+</html>

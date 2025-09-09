@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+{% block title %}Reports | CertifyX{% endblock %}
+
+{% block extra_head %}
+<style>
+:root {
+    --certifyx-yellow: #F2B900;
+    --dark-gray: #343a40;
+    --light-gray: #f8f9fa;
+    --medium-gray: #e9ecef;
+}
+
+body {
+    background-color: var(--light-gray);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Page header */
+.reports-header {
+    margin-bottom: 1rem;
+    color: var(--dark-gray);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* Buttons */
+.btn-certifyx {
+    background-color: var(--certifyx-yellow);
+    border: none;
+    color: var(--dark-gray);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+.btn-certifyx:hover {
+    background-color: #d9a700;
+    color: var(--dark-gray);
+}
+
+/* Cards */
+.card {
+    border-radius: 10px;
+    background-color: white;
+    border: 1px solid var(--medium-gray);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.card-header {
+    background-color: var(--dark-gray);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 0.4rem 0.8rem;
+}
+
+/* Table */
+.table thead th {
+    background-color: var(--medium-gray);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+}
+.table td {
+    font-size: 0.85rem;
+    color: var(--dark-gray);
+}
+
+/* Section titles */
+.section-title {
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: var(--dark-gray);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section-title i {
+    color: var(--certifyx-yellow);
+}
+
+/* Filters */
+.filters-box {
+    background-color: var(--light-gray);
+    border: 1px solid var(--medium-gray);
+    border-radius: 8px;
+    padding: 1rem;
+}
+.filters-box label {
+    color: var(--dark-gray);
+    font-weight: 600;
+}
+
+/* Charts */
+.chart-card {
+    background-color: white;
+    border: 1px solid var(--medium-gray);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+/* Highlighted Numbers */
+.highlight-number {
+    color: var(--certifyx-yellow);
+    font-weight: 700;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+        <h2 class="reports-header"><i class="fas fa-chart-line text-warning"></i> Company Dashboard - Reports</h2>
+        <a href="{% url 'export-certificates-csv' %}" class="btn btn-certifyx"><i class="fas fa-file-csv"></i> Download CSV</a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row text-center g-3">
+        <div class="col-md-3 col-6">
+            <div class="card">
+                <div class="card-header"><i class="fas fa-award"></i> Total Certificates</div>
+                <div class="card-body">
+                    <h3 class="highlight-number">{{ total_certificates }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card">
+                <div class="card-header"><i class="fas fa-check-circle"></i> Certificates Used</div>
+                <div class="card-body">
+                    <h3><span class="highlight-number">{{ certificates_used }}</span> / <span class="highlight-number">{{ certificate_limit }}</span></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card">
+                <div class="card-header"><i class="fas fa-clock"></i> Subscription Status</div>
+                <div class="card-body">
+                    {% if subscription.is_subscription_active %}
+                        <h5 class="text-success mb-0">Active</h5>
+                        <small><span class="highlight-number">{{ days_left }}</span> days left</small>
+                    {% else %}
+                        <h5 class="text-danger mb-0">Expired</h5>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card">
+                <div class="card-header"><i class="fas fa-users"></i> Total Students</div>
+                <div class="card-body">
+                    <h3 class="highlight-number">{{ total_students }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certificate Type Breakdown -->
+    <h4 class="section-title"><i class="fas fa-certificate"></i> Generated Certificate Breakdown</h4>
+    <div class="row text-center g-3">
+        <div class="col-md-3 col-6">
+            <div class="card">
+                <div class="card-header">Offer Letters</div>
+                <div class="card-body"><h4 class="highlight-number">{{ offer_letter_count }}</h4></div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card">
+                <div class="card-header">Intermediate Certificates</div>
+                <div class="card-body"><h4 class="highlight-number">{{ intermediate_count }}</h4></div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card">
+                <div class="card-header">Completion Letters</div>
+                <div class="card-body"><h4 class="highlight-number">{{ completion_count }}</h4></div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card">
+                <div class="card-header">Social Media Certificates</div>
+                <div class="card-body"><h4 class="highlight-number">{{ social_media_count }}</h4></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-box mt-4">
+        <form method="GET" class="row gy-2 gx-3 align-items-center">
+            <div class="col-auto">
+                <label>From:</label>
+                <input type="date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+            </div>
+            <div class="col-auto">
+                <label>To:</label>
+                <input type="date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+            </div>
+            <div class="col-auto">
+                <label>Template:</label>
+                <select name="template" class="form-control">
+                    <option value="">All</option>
+                    {% for label in template_labels %}
+                        <option value="{{ label }}" {% if request.GET.template == label %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-auto mt-4">
+                <button type="submit" class="btn btn-certifyx"><i class="fas fa-filter"></i> Apply Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Recent Certificates -->
+    <h4 class="section-title"><i class="fas fa-history"></i> Recent Certificates</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Candidate Name</th>
+                    <th>Issued On</th>
+                    <th>Template</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cert in recent_certificates %}
+                <tr>
+                    <td>{{ cert.candidate.name }}</td>
+                    <td>{{ cert.issue_date }}</td>
+                    <td>{{ cert.template.name }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="text-center">No certificates found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Charts -->
+    <h4 class="section-title"><i class="fas fa-chart-bar"></i> Certificates Usage (7 days)</h4>
+    <div class="chart-card mb-5">
+        <canvas id="certChart" height="100"></canvas>
+    </div>
+
+    <h4 class="section-title"><i class="fas fa-chart-pie"></i> Template Usage Distribution</h4>
+    <div class="chart-card" style="max-width: 500px; margin: auto;">
+        <canvas id="templateChart"></canvas>
+    </div>
+</div>
+
+<!-- Chart Scripts -->
+<script type="application/json" id="usage-dates-json">{{ usage_dates_json|safe }}</script>
+<script type="application/json" id="usage-counts-json">{{ usage_counts_json|safe }}</script>
+<script type="application/json" id="template-labels-json">{{ template_labels_json|safe }}</script>
+<script type="application/json" id="template-values-json">{{ template_values_json|safe }}</script>
+
+<script>
+const usageDates = JSON.parse(document.getElementById('usage-dates-json').textContent);
+const usageCounts = JSON.parse(document.getElementById('usage-counts-json').textContent);
+const templateLabels = JSON.parse(document.getElementById('template-labels-json').textContent);
+const templateCounts = JSON.parse(document.getElementById('template-values-json').textContent);
+
+// Certificates Usage Chart (CertifyX Theme)
+new Chart(document.getElementById('certChart'), {
+    type: 'bar',
+    data: {
+        labels: usageDates,
+        datasets: [{
+            label: 'Certificates Generated',
+            data: usageCounts,
+            backgroundColor: 'rgba(242, 185, 0, 0.8)',
+            borderColor: 'rgba(242, 185, 0, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: { 
+        responsive: true, 
+        scales: { 
+            y: { beginAtZero: true, ticks: { color: '#343a40' } },
+            x: { ticks: { color: '#343a40' } }
+        },
+        plugins: { legend: { labels: { color: '#343a40' } } }
+    }
+});
+
+// Template Usage Chart (CertifyX Theme)
+new Chart(document.getElementById('templateChart'), {
+    type: 'pie',
+    data: {
+        labels: templateLabels,
+        datasets: [{
+            data: templateCounts,
+            backgroundColor: [
+                'rgba(242, 185, 0, 0.8)',
+                'rgba(52, 58, 64, 0.8)',
+                'rgba(73, 80, 87, 0.8)',
+                'rgba(108, 117, 125, 0.8)'
+            ],
+            borderColor: '#fff',
+            borderWidth: 1
+        }]
+    },
+    options: { 
+        responsive: true, 
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#343a40' } } }
+    }
+});
+</script>
+{% endblock %}

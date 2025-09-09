@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify Certificate - CertifyX</title>
+    <style>
+        :root {
+            --certifyx-yellow: #F2B900;
+            --dark-gray: #343a40;
+            --light-gray: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-gray), #ffffff);
+            padding: 30px;
+            margin: 0;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .top-bar a {
+            text-decoration: none;
+            background-color: var(--certifyx-yellow);
+            color: var(--dark-gray);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .top-bar a:hover {
+            background-color: #e0a800;
+        }
+
+        /* Card Container */
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Heading */
+        h2 {
+            text-align: center;
+            color: var(--dark-gray);
+            font-weight: 700;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 8px;
+        }
+
+        /* Input */
+        /* Input and Button same size */
+        input[type="text"],
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        /* Input specific */
+        input[type="text"] {
+            margin-bottom: 18px;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--certifyx-yellow);
+            box-shadow: 0 0 0 0.15rem rgba(242, 185, 0, 0.3);
+            outline: none;
+        }
+
+        /* Button specific */
+        button {
+            background-color: var(--certifyx-yellow);
+            color: var(--dark-gray);
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #e0a800;
+        }
+
+
+       
+        /* Result Box */
+        .result {
+            margin-top: 25px;
+            background-color: var(--light-gray);
+            padding: 20px;
+            border-left: 6px solid var(--certifyx-yellow);
+            border-radius: 12px;
+        }
+
+        .result h3 {
+            margin-bottom: 15px;
+            color: var(--dark-gray);
+            font-weight: 600;
+        }
+
+        .result p {
+            margin: 8px 0;
+            font-size: 15px;
+            color: var(--dark-gray);
+        }
+
+        /* Status */
+        .status-valid {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-invalid, .status-expired {
+            color: red;
+            font-weight: bold;
+        }
+
+        .status-invalid {
+            margin-top: 18px;
+            padding: 14px;
+            background: #ffeaea;
+            border: 1px solid #ff4d4d;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+                margin: 20px 10px;
+            }
+
+            .top-bar {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        {% if user.is_authenticated %}
+            <a href="/home">Home</a>
+        {% else %}
+            <a href="/">Get Started</a>
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <h2>Certificate Verification</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="certificate_id" placeholder="🔑 Enter Certificate ID" value="{{ request.POST.certificate_id }}" required>
+            <button type="submit">Verify Certificate</button>
+        </form>
+
+        {% if certificate %}
+            <div class="result">
+                <h3>✅ Certificate Details</h3>
+                <p><strong>Student Name:</strong> {{ certificate.student_name }}</p>
+                <p><strong>Internship/Project Title:</strong> {{ certificate.project_title }}</p>
+                <p><strong>Company Name:</strong> {{ certificate.company_name }}</p>
+                <p><strong>Certificate Type:</strong> {{ certificate.certificate_type }} </p>
+                <p><strong>Start Date:</strong> {{ certificate.start_date }} </p>
+                <p><strong>End Date:</strong> {{ certificate.end_date }} </p>
+                <p><strong>Issue Date:</strong> {{ certificate.issue_date }}</p>
+                <p><strong>Status:</strong> <span class="status-valid">{{ certificate.status }}</span></p>
+            </div>
+        {% elif error %}
+            <div class="status-invalid">❌ {{ error }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    :root {
+        --certifyx-yellow: #F2B900;
+        --dark-gray: #343a40;
+        --light-gray: #f8f9fa;
+    }
+
+    .upload-card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        max-width: 600px;
+        margin: 5px auto; /* centers card & avoids page scrollbar */
+    }
+    .upload-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .upload-title {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: var(--dark-gray);
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid var(--light-gray);
+        padding-bottom: 8px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--dark-gray);
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    /* Inputs same size */
+    .form-control, 
+    .form-select, 
+    input[type="file"] {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        width: 100%;
+        display: block;
+        transition: border-color 0.2s ease;
+    }
+    .form-control:focus, .form-select:focus, input[type="file"]:focus {
+        border-color: var(--certifyx-yellow);
+        box-shadow: 0 0 0 0.15rem rgba(242, 185, 0, 0.25);
+    }
+
+    /* 🔥 Buttons same height & width */
+    .btn-upload,
+    .btn-cancel {
+        border-radius: 10px;
+        padding: 12px;
+        width: 100%;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    .btn-upload {
+        background: var(--certifyx-yellow);
+        color: var(--dark-gray);
+        border: none;
+        transition: background 0.2s ease;
+    }
+    .btn-upload:hover {
+        background: #e0a800;
+    }
+
+    .btn-cancel {
+        background: var(--light-gray);
+        color: var(--dark-gray);
+        border: 1px solid #ccc;
+        transition: background 0.2s ease;
+        text-align: center;
+        display: inline-block;
+    }
+    .btn-cancel:hover {
+        background: #e2e6ea;
+    }
+</style>
+
+<div class="container">
+    <div class="upload-card">
+        <h4 class="upload-title">Edit Template</h4>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="templateName" class="form-label fw-bold">Template Name</label>
+                <input type="text" class="form-control form-control-lg w-100" id="templateName" name="templateName" placeholder="Enter template name">
+            </div>
+
+            <div class="mb-3">
+                <label for="certificateType" class="form-label fw-bold">Certificate Type</label>
+                <input type="text" class="form-control form-control-lg w-100" id="certificateType" name="certificateType" placeholder="Enter certificate type">
+            </div>
+
+            <!-- File Upload -->
+            <div class="mb-4">
+                <label for="id_file" class="form-label">Replace File (optional)</label>
+                {{ form.file }}
+                {% if form.instance.file %}
+                    <small class="text-muted d-block mt-1">Current file: 
+                        <a href="{{ form.instance.file.url }}" target="_blank">{{ form.instance.file.name }}</a>
+                    </small>
+                {% endif %}
+            </div>
+
+            <!-- Save + Cancel same line, equal size -->
+            <div class="row g-2">
+                <div class="col-6">
+                    <button type="submit" class="btn-upload">💾 Save Changes</button>
+                </div>
+                <div class="col-6">
+                    <a href="{% url 'template_list' %}" class="btn-cancel">✖ Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

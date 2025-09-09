@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    :root {
+        --certifyx-yellow: #F2B900;
+        --dark-gray: #1e1e1e;
+        --light-gray: #f8f9fa;
+    }
+
+    body {
+        background-color: var(--light-gray);
+    }
+
+    /* Compact page container */
+    .container {
+        max-width: 650px;
+        margin: 20px auto;
+        padding: 0 15px;
+    }
+
+    /* Header */
+    header h1 {
+        font-size: 1.5rem;  /* Smaller than before */
+        font-weight: bold;
+        color: var(--dark-gray);
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    /* Alert messages */
+    .alert-messages {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 0.75rem;
+    }
+
+    .alert-info {
+        background-color: #fff9e6;
+        border-left: 5px solid var(--certifyx-yellow);
+        padding: 0.8rem;
+        margin-bottom: 0.75rem;
+        border-radius: 6px;
+        color: var(--dark-gray);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    /* Info box */
+    .info-box {
+        background-color: white;
+        padding: 1rem;
+        border-left: 5px solid var(--certifyx-yellow);
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+        font-size: 0.95rem;
+    }
+
+    .info-box h3 {
+        color: var(--dark-gray);
+        margin-bottom: 0.8rem;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    .plan-name {
+        font-weight: bold;
+        color: var(--dark-gray);
+    }
+
+    .no-plan {
+        color: #c62828;
+        font-weight: bold;
+    }
+
+    .expiry-date {
+        font-style: italic;
+        color: #555;
+    }
+
+    /* Form elements */
+    .form-label {
+        font-weight: bold;
+        margin-bottom: 0.4rem;
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .form-select {
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 6px;
+        border: 2px solid var(--certifyx-yellow);
+        margin-bottom: 1rem;
+        background: white;
+        font-size: 0.95rem;
+    }
+
+    /* Dark gray button */
+    .btn-dark-gray {
+        background-color: var(--dark-gray);
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-dark-gray:hover {
+        background-color: #000;
+    }
+
+    /* Back link */
+    .back-link {
+        margin-top: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .back-link a {
+        color: var(--dark-gray);
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .back-link a:hover {
+        text-decoration: underline;
+    }
+
+</style>
+
+<header>
+    <h1>Renew Your Subscription</h1>
+</header>
+
+<main class="container">
+    {% if messages %}
+        <ul class="alert-messages">
+            {% for message in messages %}
+                <li class="alert alert-info">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="info-box">
+        <h3>Current Subscription</h3>
+        <p><strong>Plan:</strong>
+            {% if subscription.plan %}
+                <span class="plan-name">{{ subscription.plan.name }}</span>
+            {% else %}
+                <span class="no-plan">No Plan</span>
+            {% endif %}
+        </p>
+        <p><strong>Expiry Date:</strong> <span class="expiry-date">{{ subscription.expiry_date }}</span></p>
+    </div>
+
+    <h3 style="font-size:1.2rem;">Renew Your Subscription</h3>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="renew" class="form-label">Renew for another 30 days:</label>
+        <select name="renew" id="renew" required class="form-select">
+            <option value="30">Renew for 30 Days</option>
+        </select>
+
+        <button type="submit" class="btn-dark-gray">Renew</button>
+    </form>
+
+    <p class="back-link"><a href="{% url 'plans' %}">← Back to Plan Details</a></p>
+</main>
+{% endblock %}

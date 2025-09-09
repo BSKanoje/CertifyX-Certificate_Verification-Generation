@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Successful | CertifyX</title>
+    <style>
+        :root {
+            --certifyx-yellow: #F2B900;
+            --dark-gray: #1e1e1e;
+            --light-gray: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--dark-gray);
+            padding: 40px;
+            margin: 0;
+            text-align: center;
+            color: var(--dark-gray);
+        }
+
+        .success-box {
+            max-width: 550px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .success-icon {
+            font-size: 70px;
+            color: var(--certifyx-yellow);
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--dark-gray);
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .plan-info {
+            text-align: left;
+            margin-top: 25px;
+            border-top: 1px solid var(--light-gray);
+            padding-top: 15px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .plan-info h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: var(--dark-gray);
+        }
+
+        .plan-info p {
+            margin: 4px 0;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            margin-top: 25px;
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--certifyx-yellow);
+            color: var(--dark-gray);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            background-color: #d9a900;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-box">
+        <div class="success-icon">✅</div>
+        <h1>Payment Successful!</h1>
+        <p>Your subscription is now active. Thank you for your purchase.</p>
+
+        <div class="plan-info">
+            <h3>Plan Details</h3>
+            <p><strong>Plan Name:</strong> {{ plan.name }}</p>
+            <p><strong>Certificate Limit:</strong> {{ plan.certificate_limit }}</p>
+            <p><strong>Template Limit:</strong> {{ plan.template_limit }}</p>
+            <p><strong>Price:</strong> ₹{{ plan.price }}</p>
+            <p><strong>Duration:</strong> 30 days</p>
+        </div>
+
+        <a href="{% url 'home' %}" class="btn">🏠 Return to Home</a>
+    </div>
+</body>
+</html>

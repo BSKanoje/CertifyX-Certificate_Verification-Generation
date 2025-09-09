@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<style>
+    :root {
+        --certifyx-yellow: #F2B900;
+        --dark-gray: #343a40;
+        --light-gray: #f8f9fa;
+    }
+
+    body {
+        background-color: var(--light-gray);
+    }
+
+    /* Buttons */
+    .btn-custom {
+        color: var(--dark-gray);
+        background-color: var(--certifyx-yellow);
+        border-color: var(--certifyx-yellow);
+        font-weight: bold;
+        padding: 7px 14px;
+        font-size: 0.9rem;
+    }
+    .btn-custom:hover {
+        background-color: #e0a800;
+        border-color: #d39e00;
+        color: var(--dark-gray);
+    }
+
+    /* Headings inside content */
+    .container h1, 
+    .container h3 {
+        color: var(--dark-gray);
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-bottom: 14px;
+    }
+
+    /* Content container */
+    .container {
+        background: #fff;
+        padding: 18px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        margin-top: 8px; /* Small gap under navbar */
+        font-size: 0.9rem; /* Medium-sized content text */
+    }
+
+    /* Logo placeholder */
+    .logo-placeholder {
+        width: 75px;
+        height: 75px;
+        background-color: var(--light-gray);
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        overflow: hidden;
+        flex-shrink: 0;
+        font-size: 0.8rem;
+    }
+
+    /* Logo upload control */
+    .logo-control input {
+        font-size: 0.85rem;
+    }
+
+    /* Form styling */
+    .form-label {
+        font-weight: 500;
+        font-size: 0.85rem;
+        margin-bottom: 3px;
+    }
+    .form-group {
+        margin-bottom: 10px;
+    }
+    .form-control {
+        padding: 5px 9px;
+        font-size: 0.85rem;
+    }
+
+    /* Cards and alerts */
+    .card {
+        border: none;
+        border-radius: 6px;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    }
+    .card-body p {
+        margin-bottom: 4px;
+        font-size: 0.85rem;
+    }
+    .alert {
+        font-size: 0.85rem;
+        padding: 6px 10px;
+        border-radius: 5px;
+        margin-bottom: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Profile Settings | CertifyX{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Your Company Profile</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="d-flex align-items-start mb-2" style="gap: 8px;">
+                    <div>
+                        {% if company.logo %}
+                            <img src="{{ company.logo.url }}" alt="{{ company.company_name }} Logo" class="img-thumbnail logo-placeholder">
+                        {% else %}
+                            <div class="logo-placeholder d-flex align-items-center justify-content-center">75x75</div>
+                        {% endif %}
+                    </div>
+                    <div class="logo-control">
+                        {{ form.logo }}
+                        {% if form.logo.errors %}
+                            <div class="invalid-feedback d-block">{{ form.logo.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.company_name.id_for_label }}" class="form-label">Company Name:</label>
+                    {{ form.company_name }}
+                    {% if form.company_name.errors %}
+                        <div class="invalid-feedback d-block">{{ form.company_name.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}" class="form-label">Phone Number:</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <div class="invalid-feedback d-block">{{ form.phone.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.address.id_for_label }}" class="form-label">Address:</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <div class="invalid-feedback d-block">{{ form.address.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-custom w-100">Save Changes</button>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <h3>Subscription Details</h3>
+            {% if subscription %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <p><strong>Current Plan:</strong> {{ subscription.plan.name }}</p>
+                        <p><strong>Price:</strong> ₹{{ subscription.plan.price }}</p>
+                        <p><strong>Certificates Used:</strong> {{ subscription.certificates_used }} / {{ subscription.plan.certificate_limit }}</p>
+                        <p><strong>Remaining:</strong> {{ remaining_certificates }}</p>
+                        <p><strong>Expiry Date:</strong> {{ subscription.expiry_date }} ({{ days_left }} days left)</p>
+                        <p><strong>Payment Status:</strong> {{ subscription.payment_status }}</p>
+                        {% if subscription.is_subscription_active %}
+                            <p class="text-success"><strong>Status:</strong> Active</p>
+                        {% else %}
+                            <p class="text-danger"><strong>Status:</strong> Expired</p>
+                        {% endif %}
+                        <a href="{% url 'plans' %}" class="btn btn-custom btn-sm mt-1">Manage Plans</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    No active subscription found. <a href="{% url 'plans' %}">Choose a plan</a> to get started.
+                </div>
+            {% endif %}
+
+            <h3 class="mt-2">Account Actions</h3>
+            <a href="{% url 'reset-password' %}" class="btn btn-warning btn-sm">Change Password</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

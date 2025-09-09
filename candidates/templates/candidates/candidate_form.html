@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    :root {
+        --certifyx-yellow: #F2B900;
+        --dark-gray: #343a40;
+        --light-gray: #f8f9fa;
+    }
+
+    .form-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        max-width: 900px;
+        margin: 10px auto;
+    }
+
+    h2 {
+        color: var(--dark-gray);
+        font-weight: 600;
+        margin-bottom: 15px;
+        text-align: center;
+        font-size: 1.5rem;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .form-group {
+        flex: 1 1 calc(33.33% - 12px);
+    }
+
+    label {
+        font-weight: 500;
+        color: var(--dark-gray);
+        margin-bottom: 4px;
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 6px 10px;
+        font-size: 0.9rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background: var(--light-gray);
+        transition: border-color 0.2s ease;
+    }
+
+    input:focus, select:focus {
+        border-color: var(--certifyx-yellow);
+        outline: none;
+        box-shadow: 0 0 3px rgba(242, 185, 0, 0.4);
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .btn-save {
+        background-color: var(--certifyx-yellow);
+        color: var(--dark-gray);
+        border: none;
+        padding: 7px 15px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: background-color 0.2s;
+    }
+
+    .btn-save:hover {
+        background-color: #d9a600;
+    }
+
+    .btn-cancel {
+        background-color: var(--light-gray);
+        color: var(--dark-gray);
+        border: 1px solid var(--dark-gray);
+        padding: 7px 15px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .btn-cancel:hover {
+        background-color: #e2e6ea;
+    }
+
+    .footer-text {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 0.85rem;
+        color: #777;
+    }
+
+    /* Responsive: single column on small screens */
+    @media (max-width: 768px) {
+        .form-group {
+            flex: 1 1 100%;
+        }
+    }
+</style>
+
+<div class="form-container">
+    <h2>{{ form.instance.pk|yesno:"Edit Candidate,Add Candidate" }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="form-group">{{ form.name.label_tag }}{{ form.name }}</div>
+            <div class="form-group">{{ form.usn.label_tag }}{{ form.usn }}</div>
+            <div class="form-group">{{ form.department.label_tag }}{{ form.department }}</div>
+            <div class="form-group">{{ form.college.label_tag }}{{ form.college }}</div>
+            <div class="form-group">{{ form.phone.label_tag }}{{ form.phone }}</div>  <!-- moved up -->
+            <div class="form-group">{{ form.gender.label_tag }}{{ form.gender }}</div>
+            <div class="form-group">{{ form.start_date.label_tag }}{{ form.start_date }}</div>
+            <div class="form-group">{{ form.end_date.label_tag }}{{ form.end_date }}</div>
+            <div class="form-group">{{ form.email.label_tag }}{{ form.email }}</div>
+            <div class="form-group">{{ form.project_title.label_tag }}{{ form.project_title }}</div>  <!-- moved down -->
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">💾 Save</button>
+            <a href="{% url 'candidate_list' %}" class="btn-cancel">✖ Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

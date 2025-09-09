@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --certifyx-yellow: #F2B900;
+        --dark-gray: #343a40;
+        --light-gray: #f8f9fa;
+    }
+
+    body {
+        background: var(--light-gray);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .generate-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        max-width: 900px;
+        margin: 20px auto;
+    }
+
+    .generate-card h2 {
+        color: var(--dark-gray);
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 1.8rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    select.form-control, input.form-control {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+
+    .search-bar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 15px;
+        gap: 10px;
+    }
+
+    .search-bar input {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        padding: 6px 10px;
+        width: 200px;
+    }
+
+    .btn-search {
+        padding: 6px 12px;
+        border-radius: 10px;
+        border: none;
+        background: var(--dark-gray);
+        color: var(--certifyx-yellow);
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+    }
+
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    table th {
+        background: var(--dark-gray);
+        color: #fff;
+        font-weight: 600;
+    }
+
+    table tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+
+    .btn-generate {
+        background-color: var(--dark-gray);
+        color: var(--certifyx-yellow);
+        border: none;
+        padding: 10px 20px;
+        font-weight: 700;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .btn-generate:hover {
+        background-color: #1a1a1a;
+        transform: translateY(-2px);
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-bottom: 10px;
+    }
+
+    .pagination a, .pagination span {
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        text-decoration: none;
+        color: var(--dark-gray);
+        font-size: 0.85rem;
+    }
+
+    .pagination .current {
+        background-color: var(--certifyx-yellow);
+        border-color: var(--certifyx-yellow);
+        color: var(--dark-gray);
+        font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+
+        table th {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        table td {
+            border: none;
+            position: relative;
+            padding-left: 50%;
+            margin-bottom: 8px;
+        }
+
+        table td::before {
+            position: absolute;
+            top: 8px;
+            left: 15px;
+            width: 45%;
+            white-space: nowrap;
+            font-weight: 600;
+            content: attr(data-label);
+        }
+
+        .search-bar input {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="generate-card">
+    <h2>Generate Certificates</h2>
+
+    <!-- Search -->
+    <form method="get" class="search-bar">
+        <input type="text" name="q" placeholder="Search candidates..." value="{{ query|default:'' }}">
+        <button type="submit" class="btn-search">🔍</button>
+    </form>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label class="form-label" for="template">Select Template:</label>
+            <select name="template" class="form-control" id="template" required>
+                <option value="">-- Select Template --</option>
+                {% for t in templates %}
+                    <option value="{{ t.id }}">{{ t.name }}</option>
+                {% endfor %}
+            </select>
+            <label class="form-label mt-3" for="template_type">Select Template Type:</label>
+            <select name="template_type" class="form-control" id="template_type" required>
+                <option value="">-- Select Template Type --</option>
+                {% for value, label in CERTIFICATE_TYPE_CHOICES %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>Name</th>
+                    <th>USN</th>
+                    <th>Department</th>
+                    <th>College</th>
+                    <th>Project Title</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in candidates %}
+                <tr>
+                    <td data-label="Select"><input type="checkbox" name="candidates" value="{{ c.id }}" class="candidate-checkbox"></td>
+                    <td data-label="Name">{{ c.name }}</td>
+                    <td data-label="USN">{{ c.usn }}</td>
+                    <td data-label="Department">{{ c.department }}</td>
+                    <td data-label="College">{{ c.college }}</td>
+                    <td data-label="Project Title">{{ c.project_title }}</td>
+                    <td data-label="Email">{{ c.email }}</td>
+                    <td data-label="Phone">{{ c.phone }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align:center;">No candidates found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">&laquo; Prev</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="current">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next &raquo;</a>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn-generate">Generate Certificates</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('select-all').addEventListener('change', function() {
+        let checkboxes = document.querySelectorAll('.candidate-checkbox');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+</script>
+{% endblock %}
