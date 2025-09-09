@@ -88,8 +88,9 @@ Follow these steps to set up CertifyX on your local machine:
 
 ### 1️⃣ Prerequisites
 - Python 3.9+ installed ([Download here](https://www.python.org/downloads/))
-- MySQL Server installed and running ([Download here](https://dev.mysql.com/downloads/installer/))
 - Git installed ([Download here](https://git-scm.com/downloads))
+
+> **Optional:** Install MySQL if you want to use it in production ([Download here](https://dev.mysql.com/downloads/installer/)).
 
 ### 2️⃣ Clone Repository
 ```bash
@@ -111,8 +112,21 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 ### 5️⃣ Configure Database
-Edit settings.py and update:
-```python
+
+✅ Default (SQLite)
+The project uses SQLite by default. No setup needed.
+settings.py already contains:
+```bash
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+```
+🔄 Switch to MySQL (Optional)
+If you want to use MySQL, update settings.py:
+```bash
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -124,7 +138,7 @@ DATABASES = {
     }
 }
 ```
-Run migrations:
+Then run:
 ```bash
 python manage.py makemigrations
 python manage.py migrate
@@ -138,3 +152,22 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 Now open http://127.0.0.1:8000/ in your browser to view the project.
+
+## 📂 Project Structure
+
+```plaintext
+Certificate-Generation.Verification-main/
+├── accounts/            # Handles company registration, authentication, login/logout
+├── candidates/          # Candidate CRUD (Create, Read, Update, Delete) operations
+├── generateCertificate/ # Core certificate generation logic (PDF, QR code)
+├── manageTemplate/      # Upload, edit, and manage certificate templates
+├── main/                # Main project settings and URLs
+├── media/               # Uploaded templates, logos, and generated certificates
+├── subscriptions/       # Subscription plans and usage tracking
+├── db.sqlite3           # Default SQLite database file
+├── manage.py            # Django management commands
+├── requirements.txt     # Python dependencies
+├── README.md            # Project documentation
+├── Pipfile / Pipfile.lock # (Optional) Virtual environment dependency management
+└── .gitignore           # Git ignored files and folders
+```
