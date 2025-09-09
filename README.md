@@ -138,19 +138,3 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 Now open http://127.0.0.1:8000/ in your browser to view the project.
-
-##📂 Project Structure
-```csharp
-certifyx/
-├── accounts/            # User authentication & company registration
-├── manageTemplate/      # Certificate template management
-├── generateCertificate/ # Certificate generation logic
-├── candidates/          # Candidate management module
-├── subscriptions/       # Subscription & payment plans
-├── reports/             # Analytics & reports
-├── static/              # CSS, JS, images
-├── templates/           # HTML templates
-├── requirements.txt
-├── manage.py
-└── README.md
-```
