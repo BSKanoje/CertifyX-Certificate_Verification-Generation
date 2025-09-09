@@ -112,8 +112,7 @@ pip install -r requirements.txt
 ```
 ### 5️⃣ Configure Database
 Edit settings.py and update:
-
-python
+```python
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -124,11 +123,12 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+```
 Run migrations:
-
-bash
+```bash
 python manage.py makemigrations
 python manage.py migrate
+```
 ### 6️⃣ Create Superuser
 ```bash
 python manage.py createsuperuser
