@@ -140,7 +140,7 @@ python manage.py runserver
 Now open http://127.0.0.1:8000/ in your browser to view the project.
 
 ##📂 Project Structure
-csharp
+```csharp
 certifyx/
 ├── accounts/            # User authentication & company registration
 ├── manageTemplate/      # Certificate template management
@@ -153,14 +153,4 @@ certifyx/
 ├── requirements.txt
 ├── manage.py
 └── README.md
-
-##🤝 Contributing
-Contributions are welcome!
-Please fork this repository, create a feature branch, make changes, and submit a pull request.
-
-
-###👤 Author
-Bushra Kanoje
-🎓 B.Tech CSE (2025), Bajaj Institute of Technology
-💻 Python Developer | Django Enthusiast
-📧 Contact: bushrakanoje03@gmail.com
+```
